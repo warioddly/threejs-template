@@ -14,13 +14,12 @@ class Engine {
     constructor() {
 
         this._scene = new THREE.Scene();
-        this._scene.fog = new THREE.Fog( this._scene.background, 3500, 15000 );
-        this._scene.background = new THREE.Color().setHSL( 0.51, 0.4, 0.01, THREE.SRGBColorSpace );
+        this._scene.add( new THREE.AmbientLight( 0xFFFFFF ) );
 
         this._camera = new THREE.PerspectiveCamera( 100, window.innerWidth / window.innerHeight, 0.01, 100 );
         this._camera.position.z = 1;
 
-        this._renderer = new THREE.WebGLRenderer( { antialias: true, } );
+        this._renderer = new THREE.WebGLRenderer( { antialias: true } );
         this._renderer.setPixelRatio( window.devicePixelRatio );
         this._renderer.setSize( window.innerWidth, window.innerHeight );
 
@@ -31,16 +30,13 @@ class Engine {
         this._controls.minDistance = 0.550;
         this._controls.maxDistance = 2;
 
-        const plight = new THREE.PointLight(0xffffff, 1);
-        plight.position.set(1, 1, 1);
-        this._scene.add(plight);
+
+        /// Add your code here
 
 
         document.body.appendChild( this._renderer.domElement );
-
-        window.addEventListener( 'resize', this._resize.bind(this) );
-
         this._renderer.setAnimationLoop( this._animate.bind(this) );
+        window.addEventListener( 'resize', this._resize.bind(this) );
 
     }
 
@@ -48,7 +44,6 @@ class Engine {
     private _animate( time: number ) {
 
         this._controls.update();
-
         this._renderer.render( this._scene, this._camera );
 
     }

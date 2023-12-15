@@ -20,11 +20,8 @@ const config = {
         host: 'localhost',
     },
     plugins: [
-        new HtmlWebpackPlugin({
-            template: 'index.html',
-        }),
+        new HtmlWebpackPlugin({ template: 'index.html' }),
         new MiniCssExtractPlugin(),
-
     ],
     module: {
         rules: [
@@ -45,15 +42,21 @@ const config = {
                 test: /\.(png|jpe?g|gif|svg|jpg)$/i,
                 type: 'asset/resource',
                 generator: {
-                    filename: 'assets/images/[name][ext]',
+                    filename: '/assets/images/[name][ext]',
                 },
             },
-
+            {
+                test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)$/i,
+                type: 'asset/resource',
+                generator: {
+                    filename: '/assets/videos/[name][ext]',
+                },
+            },
             {
                 test: /\.(glsl|vs|fs|vert|frag)$/i,
                 type: 'asset/resource',
                 generator: {
-                    filename: 'assets/shaders/[name][ext]',
+                    filename: '/assets/shaders/[name][ext]',
                 },
             },
         ],
