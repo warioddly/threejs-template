@@ -11,11 +11,6 @@ module.exports = {
         filename: 'bundle.js',
         path: path.resolve(__dirname, 'build'),
     },
-    devServer: {
-        static: path.join(__dirname, 'build'),
-        port: 8080,
-        open: true,
-    },
     resolve: {
         extensions: ['.ts', '.js'],
         modules: [path.resolve(__dirname, 'src'), 'node_modules'],
