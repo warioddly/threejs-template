@@ -1,3 +1,4 @@
+
 const path = require('path');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
@@ -5,13 +6,13 @@ const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
     mode: 'production',
-    entry: './src/main.ts', // Your entry point
+    entry: './src/main.ts',
     output: {
         filename: 'bundle.js',
         path: path.resolve(__dirname, 'build'),
     },
     devServer: {
-        static: path.join(__dirname, 'build'), // or whichever directory you want to serve
+        static: path.join(__dirname, 'build'),
         port: 8080,
         open: true,
     },
