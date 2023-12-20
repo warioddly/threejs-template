@@ -1,73 +1,53 @@
 const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 
-const isProduction = process.env.NODE_ENV === 'production';
 
-const stylesHandler = MiniCssExtractPlugin.loader;
-
-const config = {
-    entry: './src/main.ts',
+module.exports = {
+    mode: 'production',
+    entry: './src/main.ts', // Your entry point
     output: {
-        path: path.resolve(__dirname, 'build'),
         filename: 'bundle.js',
+        path: path.resolve(__dirname, 'build'),
+    },
+    devServer: {
+        static: path.join(__dirname, 'build'), // or whichever directory you want to serve
+        port: 8080,
+        open: true,
     },
     resolve: {
         extensions: ['.ts', '.js'],
+        modules: [path.resolve(__dirname, 'src'), 'node_modules'],
     },
-    devServer: {
-        open: true,
-        host: 'localhost',
-    },
-    plugins: [
-        new HtmlWebpackPlugin({ template: 'index.html' }),
-        new MiniCssExtractPlugin(),
-    ],
     module: {
         rules: [
             {
                 test: /\.(ts|js)$/i,
-                loader: 'ts-loader',
                 exclude: /node_modules/,
+                use: ['ts-loader'],
             },
             {
-                test: /\.css$/i,
-                use: [stylesHandler, 'css-loader'],
-            },
-            {
-                test: /\.s[ac]ss$/i,
-                use: [stylesHandler, 'css-loader', 'sass-loader'],
-            },
-            {
-                test: /\.(png|jpe?g|gif|svg|jpg)$/i,
-                type: 'asset/resource',
-                generator: {
-                    filename: '/assets/images/[name][ext]',
-                },
-            },
-            {
-                test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)$/i,
-                type: 'asset/resource',
-                generator: {
-                    filename: '/assets/videos/[name][ext]',
-                },
-            },
-            {
-                test: /\.(glsl|vs|fs|vert|frag)$/i,
-                type: 'asset/resource',
-                generator: {
-                    filename: '/assets/shaders/[name][ext]',
-                },
-            },
+                test: /\.(gltf|bin|glb|obj)$/i,
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            esModule: false,
+                        },
+                    },
+                ],
+            }
         ],
     },
-};
-
-module.exports = () => {
-    if (isProduction) {
-        config.mode = 'production';
-    } else {
-        config.mode = 'development';
-    }
-    return config;
+    plugins: [
+        new HtmlWebpackPlugin({ template: 'index.html' }),
+        new CopyPlugin({
+            patterns: [
+                {
+                    from: path.join(__dirname, `src/assets/`),
+                    to: path.join(__dirname, `build/assets/`)
+                },
+            ],
+        }),
+    ],
 };
