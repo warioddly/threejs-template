@@ -2,18 +2,31 @@
 const path = require('path');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
+const ThreeMinifierPlugin = require("@yushijinhun/three-minifier-webpack");
+const threeMinifier = new ThreeMinifierPlugin();
+const {CleanWebpackPlugin} = require("clean-webpack-plugin");
 
+const mode = process.env.NODE_ENV || 'development';
 
 module.exports = {
-    mode: 'production',
+    mode: mode,
+    devtool: (mode === 'development') ? 'inline-source-map' : false,
+    performance: {
+        hints: false
+    },
     entry: './src/main.ts',
     output: {
-        filename: 'bundle.js',
         path: path.resolve(__dirname, 'build'),
+        filename: '[name].[fullhash:8].js',
+        sourceMapFilename: '[name].[fullhash:8].map',
+        chunkFilename: '[id].[fullhash:8].js'
     },
     resolve: {
         extensions: ['.ts', '.js'],
         modules: [path.resolve(__dirname, 'src'), 'node_modules'],
+        plugins: [
+            threeMinifier.resolver,
+        ]
     },
     module: {
         rules: [
@@ -45,5 +58,12 @@ module.exports = {
                 },
             ],
         }),
+        new CleanWebpackPlugin(),
+        threeMinifier,
     ],
+    optimization: {
+        splitChunks: {
+            chunks: 'all',
+        },
+    },
 };
